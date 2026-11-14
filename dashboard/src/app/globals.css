@@ -1,0 +1,211 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-ui), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-ui), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --color-brand: var(--brand);
+  --color-brand-2: var(--brand-2);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-soft-foreground: var(--brand-soft-foreground);
+  --color-ink: var(--ink);
+  --color-sunk: var(--sunk);
+  --color-nominal: var(--nominal);
+  --color-advisory: var(--advisory);
+  --color-caution: var(--caution);
+  --color-caution-ink: var(--caution-ink);
+  --color-warning: var(--warning);
+  --color-emergency: var(--emergency);
+  --color-lung: var(--lung);
+  --color-space: var(--space);
+
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+  --shadow-soft: 0 1px 2px rgb(22 32 51 / 0.04), 0 10px 30px rgb(22 32 51 / 0.06);
+  --shadow-float: 0 14px 34px -12px rgb(22 32 51 / 0.28), 0 2px 6px -2px rgb(22 32 51 / 0.08);
+}
+
+/* ------------------------------------------------------------------
+   Atheera palette: soft blue health app.
+   One blue for everything read from Wi-Fi and every main action;
+   status colours appear only where a status is reported, always with a word.
+   ------------------------------------------------------------------ */
+:root {
+  --background: #e9eef6;
+  --foreground: #162033;
+  --ink: #162033;
+  --card: #ffffff;
+  --card-foreground: #162033;
+  --popover: #ffffff;
+  --popover-foreground: #162033;
+  --primary: #0264cc;
+  --primary-foreground: #ffffff;
+  --secondary: #d8e9fb;
+  --secondary-foreground: #0264cc;
+  --muted: #f1f4fa;
+  --muted-foreground: #6b778c;
+  --accent: #eef2fa;
+  --accent-foreground: #162033;
+  --destructive: #d6403b;
+  --border: #e0e6f0;
+  --input: #d5dce8;
+  --ring: #0264cc;
+  --radius: 1rem;
+  --chart-1: #0264cc;
+  --chart-2: #0287eb;
+  --chart-3: #d39a28;
+  --chart-4: #2f8a5b;
+  --chart-5: #d6403b;
+
+  --brand: #0264cc;
+  --brand-2: #0287eb;
+  --brand-soft: #d8e9fb;
+  --brand-soft-foreground: #0264cc;
+  --sunk: #f1f4fa;
+  --nominal: #2f8a5b;
+  --advisory: #6c7d91;
+  --caution: #d39a28;
+  --caution-ink: #8a5f0e;
+  --warning: #e0663a;
+  --emergency: #d6403b;
+  --space: #050a17;
+
+  /* read by the 3D scenes and canvases */
+  --figure: #f6f8fc;
+  --figure-2: #c3ccdb;
+  --lung: #e2786c;
+  --lung-hi: #f4ad9f;
+  --sleep-bag: #5b74a0;
+  --heat-0: #f1f4fa;
+  --heat-1: #7ab8ee;
+  --heat-2: #0246a1;
+}
+
+.dark {
+  --background: #0f1522;
+  --foreground: #e6ecf5;
+  --ink: #e6ecf5;
+  --card: #172033;
+  --card-foreground: #e6ecf5;
+  --popover: #1b2539;
+  --popover-foreground: #e6ecf5;
+  --primary: #4aa8ff;
+  --primary-foreground: #0e1830;
+  --secondary: #123a66;
+  --secondary-foreground: #9fd0ff;
+  --muted: #1e293d;
+  --muted-foreground: #8a96a8;
+  --accent: #1e293d;
+  --accent-foreground: #e6ecf5;
+  --destructive: #ff6a5f;
+  --border: #283449;
+  --input: #314058;
+  --ring: #4aa8ff;
+  --chart-1: #4aa8ff;
+  --chart-2: #9fd0ff;
+  --chart-3: #e8b24a;
+  --chart-4: #6cc093;
+  --chart-5: #ff6a5f;
+
+  --brand: #4aa8ff;
+  --brand-2: #9fd0ff;
+  --brand-soft: #123a66;
+  --brand-soft-foreground: #9fd0ff;
+  --sunk: #1e293d;
+  --nominal: #6cc093;
+  --advisory: #9aabbf;
+  --caution: #e8b24a;
+  --caution-ink: #e8b24a;
+  --warning: #f08a5d;
+  --emergency: #ff6a5f;
+
+  --figure: #dfe5ef;
+  --figure-2: #6b7a90;
+  --lung: #e0857a;
+  --lung-hi: #f3b0a3;
+  --sleep-bag: #4e6890;
+  --heat-0: #172033;
+  --heat-1: #2a78c0;
+  --heat-2: #cfe8ff;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    color-scheme: light;
+  }
+  html.dark { color-scheme: dark; }
+  body {
+    @apply bg-background text-foreground;
+    font-size: 15px;
+    font-variant-numeric: tabular-nums;
+  }
+  h1, h2, h3 { font-family: var(--font-heading); letter-spacing: -0.01em; }
+  p { text-wrap: pretty; }
+  ::selection { background: color-mix(in oklch, var(--primary) 22%, transparent); }
+  ::-webkit-scrollbar { width: 12px; height: 12px; }
+  ::-webkit-scrollbar-track, ::-webkit-scrollbar-corner { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background-color: color-mix(in oklch, var(--primary) 28%, transparent);
+    border: 3px solid transparent; border-radius: 999px; background-clip: padding-box;
+  }
+}
+
+/* Status: set --sev once, then text-(--sev), bg-(--sev) etc. work everywhere. */
+@layer utilities {
+  .sev-nominal { --sev: var(--nominal); --sev-ink: var(--nominal); }
+  .sev-advisory { --sev: var(--advisory); --sev-ink: var(--advisory); }
+  .sev-caution { --sev: var(--caution); --sev-ink: var(--caution-ink); }
+  .sev-warning { --sev: var(--warning); --sev-ink: var(--warning); }
+  .sev-emergency { --sev: var(--emergency); --sev-ink: var(--emergency); }
+}
+
+/* The emergency bar is the only thing on the page that pulses. */
+/* Animates only opacity on a separate layer, so it never forces the page to repaint while scrolling. */
+@keyframes alarm-pulse { 50% { opacity: 1; } }
+.alarm-pulse { isolation: isolate; }
+.alarm-pulse::after {
+  content: ""; position: absolute; inset: -6px; z-index: -1; border-radius: inherit; pointer-events: none;
+  background: color-mix(in oklch, var(--emergency) 30%, transparent); opacity: 0;
+  animation: alarm-pulse 1.6s ease-in-out infinite; will-change: opacity;
+}
+@media (prefers-reduced-motion: reduce) { .alarm-pulse::after { animation: none; } }
+
+/* Canvas heatmap stays crisp */
+.pixelated { image-rendering: pixelated; }

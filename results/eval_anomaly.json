@@ -1,0 +1,17 @@
+{
+ "model": "ResNet18 x4 ensemble, robust training (grouped split)",
+ "roc_auc": 1.0,
+ "threshold": 0.25,
+ "consecutive_windows": 1,
+ "recall": 1.0,
+ "false_per_100": 0.22197558268590456,
+ "n_fall": 94,
+ "n_other": 901,
+ "recordings": {
+  "falls": 16,
+  "falls_caught": 16,
+  "other": 96,
+  "false_alarms": 1
+ },
+ "protocol": "held-out recordings; threshold and persistence chosen on the validation recordings"
+}

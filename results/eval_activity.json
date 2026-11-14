@@ -1,0 +1,119 @@
+{
+ "model": "ResNet18 x4 ensemble, robust training (grouped split)",
+ "n": 995,
+ "n_recordings": 112,
+ "accuracy": 0.9597989949748744,
+ "classes": [
+  "lie_down",
+  "fall",
+  "walk",
+  "pickup",
+  "run",
+  "sit_down",
+  "stand_up"
+ ],
+ "per_class": {
+  "lie_down": {
+   "recall": 0.8863636363636364,
+   "precision": 0.9831932773109243
+  },
+  "fall": {
+   "recall": 1.0,
+   "precision": 0.9894736842105263
+  },
+  "walk": {
+   "recall": 0.9866666666666667,
+   "precision": 0.9932885906040269
+  },
+  "pickup": {
+   "recall": 0.9270833333333334,
+   "precision": 0.898989898989899
+  },
+  "run": {
+   "recall": 1.0,
+   "precision": 0.9872340425531915
+  },
+  "sit_down": {
+   "recall": 0.875,
+   "precision": 0.8860759493670886
+  },
+  "stand_up": {
+   "recall": 0.9344262295081968,
+   "precision": 0.8142857142857143
+  }
+ },
+ "confusion": [
+  [
+   117,
+   0,
+   2,
+   6,
+   0,
+   7,
+   0
+  ],
+  [
+   0,
+   94,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  [
+   0,
+   1,
+   296,
+   0,
+   3,
+   0,
+   0
+  ],
+  [
+   0,
+   0,
+   0,
+   89,
+   0,
+   0,
+   7
+  ],
+  [
+   0,
+   0,
+   0,
+   0,
+   232,
+   0,
+   0
+  ],
+  [
+   0,
+   0,
+   0,
+   4,
+   0,
+   70,
+   6
+  ],
+  [
+   2,
+   0,
+   0,
+   0,
+   0,
+   2,
+   57
+  ]
+ ],
+ "protocol": "whole UT-HAR recordings held out (70/10/20 by class); same people and room in every split",
+ "all_archs": {
+  "CNN+GRU": 0.9578313253012049,
+  "ResNet18": 0.9829317269076305,
+  "BiLSTM": 0.893574297188755
+ },
+ "all_archs_protocol": "SenseFi split (X_val + X_test), pretrained weights unchanged - leaky, reproduction only",
+ "leakage_note": "499 of SenseFi's 500 test windows come from recordings that also supply training windows",
+ "sensefi_recipe_on_heldout_recordings": 0.9186
+}

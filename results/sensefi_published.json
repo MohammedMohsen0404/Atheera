@@ -1,0 +1,19 @@
+{
+  "source": "SenseFi benchmark, UT-HAR results published with its pretrained weights (models/sensefi/UT-HAR/UT-HAR_result)",
+  "reference": "J. Yang, X. Chen, H. Zou, et al. SenseFi: A library and benchmark on deep-learning-empowered WiFi human sensing. Patterns, 2023. github.com/xyanchen/WiFi-CSI-Sensing-Benchmark",
+  "licence": "MIT",
+  "note": "Accuracy on SenseFi's own UT-HAR test split, which is leaky (499 of its 500 test windows come from recordings that also supply training windows). Kept here only as a reproduction check; see results/eval_activity.json for the held-out recording results.",
+  "accuracy": {
+    "MLP": 0.9200,
+    "LeNet": 0.9747,
+    "ResNet18": 0.9828,
+    "ResNet50": 0.9721,
+    "ResNet101": 0.9499,
+    "RNN": 0.8323,
+    "GRU": 0.9151,
+    "LSTM": 0.8719,
+    "BiLSTM": 0.8932,
+    "CNN+GRU": 0.9574,
+    "ViT": 0.9594
+  }
+}

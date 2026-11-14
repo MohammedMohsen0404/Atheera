@@ -1,0 +1,73 @@
+# "Night shift" demo scenario — a full crew of 7, 10 minutes of station time.
+# Each segment lists candidate tracks in priority order: real dataset tracks first, synthetic placeholders last.
+# Real track ids are produced by scripts/build_tracks.py (wb_* = WiRe-Breath, uthar_* = UT-HAR).
+name: ISS night shift
+duration_s: 600
+speed: 4          # default replay speed (x real time); adjustable from the dashboard
+
+modules:          # floor-plan ids used by the dashboard
+  - {id: CQ1, name: "Crew Quarters 1 (Node 2)"}
+  - {id: CQ2, name: "Crew Quarters 2 (Node 2)"}
+  - {id: CQ3, name: "Crew Quarters 3 (Node 2)"}
+  - {id: CQ4, name: "Crew Quarters 4 (Node 2)"}
+  - {id: LAB, name: "US Lab (Destiny)"}
+  - {id: NODE1, name: "Node 1 Galley (Unity)"}
+
+crew:
+  - id: CDR
+    name: Commander
+    module: CQ1
+    timeline:
+      - {at: 0, scheduled: SLEEP, track: [wb_s1_normal_quiet, wb_s1_log_quiet, syn_sleep_normal]}
+
+  - id: FE1
+    name: Flight Engineer 1
+    module: CQ2
+    timeline:
+      - {at: 0, scheduled: SLEEP, track: [wb_s2_normal_quiet, syn_sleep_normal], offset: 40}
+      # breathing gradually slows: FE1's own real recordings (S2), time-stretched x1.0 -> x0.7 (about 9.3 -> 6.5 br/min)
+      - {at: 240, scheduled: SLEEP, track: [wbx_s2_slowing, syn_sleep_slowing], label: "Breathing begins to slow"}
+      - {at: 420, scheduled: SLEEP, track: [wb_s2_normal_quiet, syn_sleep_normal]}
+
+  - id: FE2
+    name: Flight Engineer 2
+    module: LAB
+    timeline:
+      - {at: 0, scheduled: ACTIVE, track: [uthar_walk, syn_walk]}
+      - {at: 120, scheduled: ACTIVE, track: [uthar_pickup, syn_pickup]}
+      - {at: 300, scheduled: ACTIVE, track: [uthar_fall, syn_fall], loop: false, label: "Loses footing in the Lab"}
+      - {at: 306, scheduled: REST, track: [uthar_lie_down, syn_lie_down]}
+
+  - id: MS1
+    name: Mission Specialist
+    module: NODE1
+    timeline:
+      - {at: 0, scheduled: REST, track: [wb_s3_sitting_interference, syn_rest_noisy]}
+      - {at: 360, scheduled: EXERCISE, track: [uthar_run, syn_run], label: "Treadmill session"}
+
+  - id: FE3
+    name: Flight Engineer 3
+    module: CQ3
+    timeline:
+      - {at: 0, scheduled: SLEEP, track: [wb_s3_log_quiet, wb_s3_yearner_quiet, syn_sleep_normal]}
+
+  - id: FE4
+    name: Flight Engineer 4
+    module: CQ4
+    timeline:
+      - {at: 0, scheduled: SLEEP, track: [wb_s5_soldier_quiet, syn_sleep_normal], offset: 25}
+      # a nearby payload adds radio interference: the signal gets noisier, but breathing is still read and no false alarm is raised
+      - {at: 200, scheduled: SLEEP, track: [wb_s5_soldier_interference, syn_rest_noisy], label: "Radio interference from a payload"}
+      - {at: 380, scheduled: SLEEP, track: [wb_s5_soldier_quiet, syn_sleep_normal]}
+
+  - id: MS2
+    name: Mission Specialist 2
+    module: LAB
+    timeline:
+      - {at: 0, scheduled: ACTIVE, track: [uthar_sit_down, syn_sit_down]}
+      - {at: 150, scheduled: ACTIVE, track: [uthar_stand_up, syn_stand_up], label: "Starts a lab experiment"}
+      - {at: 170, scheduled: ACTIVE, track: [uthar_pickup, syn_pickup]}
+      - {at: 420, scheduled: ACTIVE, track: [uthar_walk, syn_walk], label: "Moves samples across the Lab"}
+
+events:
+  - {at: 330, type: auto_ack, crew: FE2}   # crew member responds on comm loop

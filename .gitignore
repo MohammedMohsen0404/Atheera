@@ -1,0 +1,11 @@
+data/
+models/
+third_party/
+__pycache__/
+*.pyc
+.venv/
+node_modules/
+dashboard/dist/
+.env
+dashboard/.next/
+*.tsbuildinfo

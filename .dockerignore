@@ -1,0 +1,23 @@
+# Keeps the Docker build small: none of this is needed to run the demo.
+.git
+.env
+.venv
+**/__pycache__
+**/*.pyc
+**/*.tsbuildinfo
+
+# datasets, trained models and third-party code are downloaded or trained locally (not in git)
+data
+models
+third_party
+
+# not part of the running app
+video
+docs
+scripts
+tests
+
+# the dashboard is built inside the image; never copy the host's build output or packages
+dashboard/node_modules
+dashboard/dist
+dashboard/.next

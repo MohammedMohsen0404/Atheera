@@ -1,0 +1,13 @@
+[project]
+name = "atheer"
+version = "0.1.0"
+description = "Spatial-CSI Astronaut Health & Safety Guard - contactless Wi-Fi CSI monitoring PoC (NASA Space Apps)"
+requires-python = ">=3.10"
+dependencies = ["numpy", "scipy", "h5py", "torch", "einops", "scikit-learn", "pyyaml", "fastapi", "uvicorn[standard]", "gdown"]
+
+[project.optional-dependencies]
+llm = ["anthropic"]
+dev = ["pytest"]
+
+[tool.setuptools.packages.find]
+include = ["atheer*"]

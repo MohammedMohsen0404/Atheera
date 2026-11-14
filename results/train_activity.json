@@ -1,0 +1,32 @@
+{
+ "seed0": {
+  "best_epoch": 67,
+  "val_acc": 0.9624217118997912,
+  "test_acc": 0.9336683417085427,
+  "minutes": 4.0,
+  "path": "models\\har_resnet18_grp_gpu_s0.pt"
+ },
+ "seed1": {
+  "best_epoch": 27,
+  "val_acc": 0.9582463465553236,
+  "test_acc": 0.9386934673366835,
+  "minutes": 3.8,
+  "path": "models\\har_resnet18_grp_gpu_s1.pt"
+ },
+ "seed2": {
+  "best_epoch": 49,
+  "val_acc": 0.9561586638830898,
+  "test_acc": 0.942713567839196,
+  "minutes": 4.8,
+  "path": "models\\har_resnet18_grp_gpu_s2.pt"
+ },
+ "ensemble": {
+  "val_acc": 0.9624217118997912,
+  "test_acc": 0.9567839195979899,
+  "temperature": 0.8288612373804823
+ },
+ "choice_on_val": "ensemble",
+ "epochs": 80,
+ "lr": 0.001,
+ "device": "cuda"
+}
