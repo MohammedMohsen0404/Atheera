@@ -1,12 +1,27 @@
-# Atheer: Spatial-CSI Astronaut Health & Safety Guard
+# Atheera: contactless crew health monitoring from Wi-Fi
 
-Contactless, camera-free health and safety monitoring for space habitats, built from the Wi-Fi signals a station already has.
-NASA Space Apps proof of concept: published datasets, published models, a thin AI fusion layer, and a mission-control dashboard.
+**A health and safety watch for astronauts that needs no camera, no wearable and no new sensor.**
+Atheera reads how a person's body disturbs the Wi-Fi signal already filling a room (channel state information, CSI)
+and turns it into **breathing rate**, **activity and falls**, **rest during the sleep period** and **unusual-movement**
+alerts, shown on a live crew dashboard with a 3D station view. Built for the NASA Space Apps 2026 challenge
+*Create Health Monitoring Software for Astronauts on Space Missions*.
 
-```
-public CSI datasets ─► signal processing + pretrained models ─► fusion & alerts ─► replay ─► dashboard
- WiRe-Breath, UT-HAR    breathing rate, activity, fall, motion    rules + LLM brief   FastAPI   React
-```
+## Results
+
+Every figure comes from held-out recordings of public datasets, with whole recordings kept apart between training and testing.
+
+| Measure | Result | Test |
+|---|---|---|
+| **Breathing rate** | **0.40 breaths/min** mean error (median 0.10), **96.2%** within ±2. A classic method scores 0.84 on the same windows | 1,403 windows, 465 recordings, 5 people, 2 rooms, 9 postures |
+| **Activity** | **96.0%** accuracy. The benchmark's own recipe scores 91.9% on the same strict split | 995 windows, 112 held-out recordings |
+| **Falls** | **16 of 16** fall recordings caught, 1 false alarm in 96 recordings (95% intervals: 79–100% caught, 0.03–5.7% false alarms) | held-out recordings |
+| **Rest in the sleep period** | **97.9%** of time scored as rest, 0.0% wrongly scored awake | WiRe-Breath recordings played as sleep periods |
+| **Known-answer test** | 6.5–34 breaths/min recovered within 0.2; pure noise gets confidence 0 | synthetic signals |
+| **Engineering** | **38** automated tests | `pytest` |
+
+The published 98.3% accuracy for the standard activity benchmark is inflated: 499 of its 500 test windows come from
+recordings that also supply training windows. Atheera is evaluated on the stricter split. Details and every limit are in
+[docs/LIMITATIONS.md](docs/LIMITATIONS.md).
 
 ## Screenshots
 
@@ -16,17 +31,42 @@ public CSI datasets ─► signal processing + pretrained models ─► fusion &
 ![Station view at the scripted fall](assets/screenshots/station.jpg)
 *Station view at the scripted fall: the lab turns red and the alert is logged.*
 
+## How it works
+
+```
+Wi-Fi CSI ─► clean-up ─► four readers ─► fusion & alerts ─► replay ─► dashboard
+             filter,     breathing,      context-aware       FastAPI   Next.js
+             resample    activity+falls, limits, debounce,             + 3D station
+                         movement, rest  latching, evidence
+```
+
+- **Breathing:** band-pass 6–36 breaths/min, the 30 clearest channels fused into one spectrum, Viterbi tracking, and a calibrated confidence. It reports "lost" instead of guessing, and has no rate prior, so abnormal breathing is not hidden.
+- **Activity and falls:** an ensemble of 4 ResNet-18 networks (11.2 M parameters each) trained with noise, gain, dead-subcarrier and packet-loss augmentation.
+- **Unusual movement:** a motion index compared with the person's own 120-second baseline.
+- **Rest:** steady breathing with no body movement during the scheduled sleep period (the idea behind wrist actigraphy, from Wi-Fi). Time the system cannot judge is reported separately, never counted as rest.
+- **Alerts:** advisory, caution, warning and emergency levels that follow the ISS caution-and-warning classes. Alerts are rule-based, latch until acknowledged and carry the evidence behind them.
+
+How Atheera maps to the challenge and to NASA's hazards: [docs/CHALLENGE.md](docs/CHALLENGE.md).
+
 ## Run the demo
 
 ```bash
 pip install -e .            # Python 3.10+
 cd dashboard && npm install && npm run build && cd ..
 uvicorn atheer.api.main:app --port 8010
-# open http://127.0.0.1:8010  →  Start replay
+# open http://127.0.0.1:8010  (the ten-minute demo shift starts by itself; a guided tour opens on the first visit)
 ```
 
 Development with hot reload: run the uvicorn command above, then `cd dashboard && npm run dev` and open http://localhost:3000 (Next.js proxies `/api` to the backend on :8010; the telemetry WebSocket connects to :8010 directly).
-Set `ANTHROPIC_API_KEY` to have Claude write the crew brief; without it a rule-based summary is used.
+A Docker Compose file (`docker-compose.yml`) packages the same system; it has not been built on our side yet.
+
+## What this is, and what comes next
+
+Atheera is a working proof of concept. The demo replays real recordings through the complete pipeline, the same way a live stream would flow.
+
+- **Data:** the recordings were made on Earth (WiRe-Breath for breathing and rest, UT-HAR for activity and falls). No CSI data from orbit exists yet.
+- **Next:** a live ESP32 or Intel 5300 stream, recordings in a metal-walled mock-up, more people, and review of alert thresholds with flight surgeons.
+- **Scope:** breathing, activity, rest and falls. Heart rate, blood pressure, blood sugar, temperature and mood stay with the medical kit's dedicated instruments; Atheera complements them and is not a medical device.
 
 ## Rebuild data and results
 
@@ -48,13 +88,12 @@ Data sources: WiRe-Breath GitHub release v1.0.0 (`data/raw/wirebreath`), SenseFi
 | Path | What it does |
 |---|---|
 | `atheer/ingest/` | Dataset loaders (WiRe-Breath port of the authors' MATLAB loader) |
-| `atheer/modules/respiration.py` | Amplitude + cross-subcarrier-ratio phase channels → band-pass → summed spectra of the best 30 channels → Viterbi tracking over spectral peaks → rate + calibrated confidence (classic PCA peak kept as baseline) |
-| `atheer/modules/activity.py` | SenseFi ResNet18 trained with robustness augmentation on UT-HAR (published weights kept for reproduction); dead-subcarrier repair, per-window normalisation, calibrated probabilities |
-| `atheer/modules/anomaly.py` | Motion index vs personal baseline, fall probability, optional IsolationForest |
-| `atheer/fusion/engine.py` | Crew context, context-aware limits, confidence gating, debounced C&W alerts with evidence |
-| `atheer/fusion/brief.py` | Crew brief from Claude, with an offline template fallback |
+| `atheer/modules/respiration.py` | Amplitude + cross-subcarrier-ratio channels → band-pass → summed spectra of the best 30 channels → Viterbi tracking → rate + calibrated confidence (classic PCA peak kept as baseline) |
+| `atheer/modules/activity.py` | SenseFi ResNet-18 ensemble trained with robustness augmentation on UT-HAR (published weights kept for reproduction); dead-subcarrier repair, per-window normalisation, calibrated probabilities |
+| `atheer/modules/anomaly.py` | Motion index vs personal baseline, fall probability |
+| `atheer/modules/rest.py` | Rest tracker for the scheduled sleep period |
+| `atheer/fusion/engine.py` | Crew context, context-aware limits, confidence gating, debounced caution-and-warning alerts with evidence |
+| `atheer/fusion/brief.py` | Optional crew brief endpoint (language model with an offline template fallback); the dashboard does not use it and it never decides an alert |
 | `atheer/replay/` + `scenarios/` | Scenario timeline that streams dataset tracks through the pipeline |
 | `atheer/api/main.py` | REST + WebSocket backend |
-| `dashboard/` | Next.js 16 + React 19, Tailwind 4, shadcn/Radix, TanStack Query, Recharts and React Three Fiber; exported as static files to `dashboard/dist`. Pages: Crew, Station (3D), Shift log, How it works |
-
-Read [docs/LIMITATIONS.md](docs/LIMITATIONS.md) before presenting results. How Atheera maps to the Space Apps challenge and NASA's risks: [docs/CHALLENGE.md](docs/CHALLENGE.md).
+| `dashboard/` | Next.js 16 + React 19, Tailwind 4, shadcn/Radix, TanStack Query, Recharts and React Three Fiber; exported as static files to `dashboard/dist`. Pages: Crew, Station (3D with a walk-through mode), Shift log, How it works, plus a guided tour |
