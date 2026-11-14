@@ -6,6 +6,14 @@ and turns it into **breathing rate**, **activity and falls**, **rest during the 
 alerts, shown on a live crew dashboard with a 3D station view. Built for the NASA Space Apps 2026 challenge
 *Create Health Monitoring Software for Astronauts on Space Missions*.
 
+## Screenshots
+
+![Crew page: seven crew, live breathing and activity](assets/screenshots/crew.jpg)
+*Crew page: seven crew, live breathing and activity.*
+
+![Station view at the scripted fall](assets/screenshots/station.jpg)
+*Station view at the scripted fall: the lab turns red and the alert is logged.*
+
 ## Results
 
 Every figure comes from held-out recordings of public datasets, with whole recordings kept apart between training and testing.
@@ -22,14 +30,6 @@ Every figure comes from held-out recordings of public datasets, with whole recor
 The published 98.3% accuracy for the standard activity benchmark is inflated: 499 of its 500 test windows come from
 recordings that also supply training windows. Atheera is evaluated on the stricter split. Details and every limit are in
 [docs/LIMITATIONS.md](docs/LIMITATIONS.md).
-
-## Screenshots
-
-![Crew page: seven crew, live breathing and activity](assets/screenshots/crew.jpg)
-*Crew page: seven crew, live breathing and activity.*
-
-![Station view at the scripted fall](assets/screenshots/station.jpg)
-*Station view at the scripted fall: the lab turns red and the alert is logged.*
 
 ## How it works
 
