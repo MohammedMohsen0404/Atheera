@@ -8,6 +8,14 @@ public CSI datasets ─► signal processing + pretrained models ─► fusion &
  WiRe-Breath, UT-HAR    breathing rate, activity, fall, motion    rules + LLM brief   FastAPI   React
 ```
 
+## Screenshots
+
+![Crew page: seven crew, live breathing and activity](assets/screenshots/crew.jpg)
+*Crew page: seven crew, live breathing and activity.*
+
+![Station view at the scripted fall](assets/screenshots/station.jpg)
+*Station view at the scripted fall: the lab turns red and the alert is logged.*
+
 ## Run the demo
 
 ```bash
