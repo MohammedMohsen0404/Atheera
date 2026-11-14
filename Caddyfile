@@ -1,0 +1,3 @@
+atheera.yousry.dev {
+	reverse_proxy atheera:8010
+}

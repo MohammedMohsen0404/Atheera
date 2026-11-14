@@ -58,7 +58,52 @@ uvicorn atheer.api.main:app --port 8010
 ```
 
 Development with hot reload: run the uvicorn command above, then `cd dashboard && npm run dev` and open http://localhost:3000 (Next.js proxies `/api` to the backend on :8010; the telemetry WebSocket connects to :8010 directly).
-A Docker Compose file (`docker-compose.yml`) packages the same system; it has not been built on our side yet.
+
+## Run with Docker (local)
+
+One command builds everything (the Next.js dashboard, then a slim Python runtime) and serves the whole app on one port. No dataset, no model weights and no GPU are needed — the backend replays the recordings in `results/tracks`.
+
+```bash
+docker compose up --build
+# open http://localhost:8010  (the demo shift starts by itself)
+```
+
+To stop: `docker compose down`. To see the logs: `docker compose logs -f`.
+
+## Deploy with Docker (Ubuntu server)
+
+What you need: a server with Docker + the Compose plugin (`sudo apt-get install docker.io docker-compose-v2` on Ubuntu 24.04), and the code (clone this repo, or rsync your working copy if it is private).
+
+1. **Get the code on the server.** For a private repo, add a read-only [deploy key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys) so the server can `git pull`; otherwise rsync from your machine.
+
+2. **Point a domain at the server** (A record → your server IP). For HTTPS the app ships with [Caddy](https://caddyserver.com), which issues and renews Let's Encrypt certificates automatically. Edit `Caddyfile` and replace the example domain with yours:
+
+   ```text
+   atheera.yousry.dev {
+   	reverse_proxy atheera:8010
+   }
+   ```
+
+3. **Open the firewall / cloud security group** for ports 80 and 443 (80 is required for the Let's Encrypt challenge, 443 serves the app).
+
+4. **Start it:**
+
+   ```bash
+   docker compose -f docker-compose.yml -f docker-compose.override.yml up -d --build
+   # open https://your-domain.example
+   ```
+
+   The override file (`docker-compose.override.yml`) publishes only Caddy on 80/443 and keeps the app on the internal network. Without HTTPS or a domain, skip the override and the Caddy service: `docker compose up -d --build` serves plain HTTP on 8010 (`ports: "8010:8010"` in `docker-compose.yml`).
+
+5. **Update it later:**
+
+   ```bash
+   cd ~/Atheer
+   git pull
+   docker compose -f docker-compose.yml -f docker-compose.override.yml up -d --build
+   ```
+
+Housekeeping: the container restarts on crash and on server reboot (`restart: unless-stopped`), has a `/api/state` healthcheck, and runs as an unprivileged user with all capabilities dropped. Rebuilding the replay tracks or retraining models is done outside the image (see "Rebuild data and results" below), since the demo only replays the committed `results/tracks`.
 
 ## What this is, and what comes next
 

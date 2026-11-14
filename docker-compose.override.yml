@@ -1,0 +1,26 @@
+# Server deployment overrides:
+#  - the app is published only inside the compose network; Caddy terminates
+#    HTTPS on 443 (and port 80 for the Let's Encrypt challenge) and proxies to it.
+#  - the VM's Azure NSG opens ports 80/443/22, so the app is reachable at
+#      https://atheera.yousry.dev
+services:
+  atheera:
+    ports: !override []
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    depends_on:
+      - atheera
+    ports: !override
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"   # HTTP/3
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:
