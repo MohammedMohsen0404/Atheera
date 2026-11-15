@@ -107,8 +107,9 @@ Housekeeping: the container restarts on crash and on server reboot (`restart: un
 
 ## What this is, and what comes next
 
-Atheera is a working proof of concept. The demo replays real recordings through the complete pipeline, the same way a live stream would flow.
+Atheera is a research prototype. The demo is a replay of real recorded Wi-Fi data through the complete pipeline, the same way a live stream would flow: no live hardware and no microgravity data were used.
 
+- **History:** the project was developed locally and uploaded to this repository as a snapshot, so the commit history is short and does not show when each part was written.
 - **Data:** the recordings were made on Earth (WiRe-Breath for breathing and rest, UT-HAR for activity and falls). No CSI data from orbit exists yet.
 - **Next:** a live ESP32 or Intel 5300 stream, recordings in a metal-walled mock-up, more people, and review of alert thresholds with flight surgeons.
 - **Scope:** breathing, activity, rest and falls. Heart rate, blood pressure, blood sugar, temperature and mood stay with the medical kit's dedicated instruments; Atheera complements them and is not a medical device.
